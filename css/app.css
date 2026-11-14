@@ -1,0 +1,249 @@
+/* App layout on top of vendor/smartisan/smartisan.css.
+   Tokens, components, press states and typography come from the kit.
+   This file only does shell layout, Traditional Chinese font fallback, and transit rows. */
+
+:root {
+  /* Keep the kit stack, but prefer Traditional Chinese CJK fonts for zh-TW. */
+  --s-font: "Smartisan Compact", "Inter", -apple-system, BlinkMacSystemFont,
+    "Noto Sans CJK TC", "Noto Sans TC", "Source Han Sans TW", "PingFang TC",
+    "Microsoft JhengHei", "Noto Sans CJK SC", "Source Han Sans SC", "Noto Sans SC",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  min-height: 100dvh;
+}
+
+body.s-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 100%;
+}
+
+/* Sticky header block: app bar + location/updated-at, under the notch. */
+.app-top {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background: var(--s-page-texture);
+}
+.app-top .s-appbar {
+  position: relative;
+  padding-top: env(safe-area-inset-top);
+  box-sizing: content-box;
+}
+.app-top .s-appbar--shadow::after { display: none; }
+.app-top::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 14px;
+  background: var(--s-appbar-shadow);
+  pointer-events: none;
+}
+
+.app-frame {
+  width: 100%;
+  max-width: var(--s-screen);
+  margin: 0 auto;
+}
+
+#status-strip {
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--s-text-summary);
+  padding: 4px 16px 10px;
+}
+
+#main {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: var(--s-screen);
+  margin: 0 auto;
+  padding: 12px 12px calc(54px + 24px + env(safe-area-inset-bottom));
+}
+
+.s-list-group + .s-list-group {
+  margin-top: 14px;
+}
+
+/* Multiple white cards inside one group (one stop each). */
+.stop-card + .stop-card,
+.trip-card + .trip-card {
+  margin-top: 10px;
+}
+
+/* Route / departure rows: tighter than the 60dp settings row, still on the 6dp grid. */
+.eta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  padding: 10px 16px;
+  box-shadow: inset 0 calc(-1 * var(--s-hair)) 0 var(--s-divider-color);
+  font-size: 14px;
+  color: var(--s-text-primary);
+  background: var(--s-white);
+}
+.stop-card .eta-row:last-child,
+.trip-card .eta-row:last-child {
+  box-shadow: none;
+}
+
+.eta-main { flex: 1; min-width: 0; }
+.eta-name { font-size: 14px; color: var(--s-text-primary); }
+.eta-text, .eta-live {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--s-text-summary);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.eta-live { color: var(--s-link); font-weight: 600; }
+.eta-live .s-chip { font-weight: 600; }
+.eta-muted { font-size: 12px; color: var(--s-text-secondary); }
+.eta-flag { color: var(--s-text-hint); font-size: 12px; }
+.eta-warn { color: var(--s-warning); font-size: 12px; }
+.eta-extra { color: var(--s-text-summary); font-size: 12px; }
+.dir-head {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--s-text-summary);
+  align-items: center;
+}
+.train-time {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--s-text-title);
+  width: 64px;
+  flex: none;
+}
+.train-meta { flex: 1; min-width: 0; }
+.trip-detail {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--s-text-summary);
+  white-space: pre-wrap;
+}
+
+/* Live / timetable chips are display-only; don't look like a second accent. */
+.eta-row .s-chip,
+.s-list-item .s-chip {
+  pointer-events: none;
+  height: 22px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+
+#ios-tip {
+  margin: 0 12px 12px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--s-text-summary);
+  background: var(--s-white);
+  border: var(--s-hair) solid var(--s-grey-400);
+  border-radius: var(--s-r-lg);
+  box-shadow: var(--s-shadow-card);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+#ios-tip[hidden] { display: none !important; }
+#ios-tip p { margin: 0; flex: 1; }
+#ios-tip button { flex: none; }
+
+/* Bottom nav: fixed, with home-indicator padding. Selected item uses the app accent (system blue),
+   following R2 device-behavior rather than the Kit's enlarged grey icon. */
+.s-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8;
+  height: auto;
+  min-height: 54px;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -0.8px 0 #e2e2e2;
+  background: var(--s-white);
+}
+.s-bottom-nav [aria-current="page"] { color: var(--s-link); }
+.s-bottom-nav [aria-current="page"] .s-icon { color: var(--s-link); }
+
+.field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--s-white);
+  box-shadow: inset 0 calc(-1 * var(--s-hair)) 0 var(--s-divider-color);
+}
+.field-row:last-child { box-shadow: none; }
+.field-row label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--s-text-summary);
+}
+.field-row .s-textfield { max-width: 100%; }
+.field-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 12px 6px;
+}
+.inline-times {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.inline-times .s-textfield { flex: 1; }
+.inline-times span { color: var(--s-text-secondary); font-size: 14px; }
+
+#address-results { background: var(--s-white); border-radius: 0 0 var(--s-r-lg) var(--s-r-lg); }
+#address-results .s-list-item { width: 100%; border: 0; text-align: left; }
+
+.notice { color: var(--s-warning) !important; text-align: left; padding: 0 16px; line-height: 1.5; }
+
+/* Time inputs look like kit text fields even for type=time. */
+input[type="time"].s-textfield {
+  min-width: 0;
+}
+
+/* Settings / home radio rows already come from .s-radio-item; keep the card intact. */
+
+#home-plan-card .s-btn { width: 100%; }
+
+/* Desktop: keep component sizes, centre the 432dp column on the pinstripe page. */
+@media (min-width: 480px) {
+  .s-appbar { max-width: var(--s-screen); margin: 0 auto; width: 100%; }
+  .s-bottom-nav {
+    left: 50%;
+    right: auto;
+    width: 100%;
+    max-width: var(--s-screen);
+    transform: translateX(-50%);
+  }
+}
+
+/* Smartisan OS has no official dark theme. A derived dark scheme is omitted
+   so the light, low-contrast skeuomorphism stays authentic. */
+
+.trip-card > .trip-head {
+  align-items: flex-start;
+  height: auto;
+  min-height: 60px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.trip-card .s-list-item__title {
+  white-space: normal;
+  line-height: 1.4;
+}
+.trip-tag { display: block; margin-top: 6px; }
